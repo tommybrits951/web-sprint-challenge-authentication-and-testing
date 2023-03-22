@@ -15,11 +15,21 @@ async function checkUsername(req, res, next) {
         next(error)
     }
 }
-
+function checkCred(req, res, next) {
+    const {username, password} = req.body;
+    if (!username || !password) {
+        res.status(422).json({message: "username and password required"})
+    } else {
+        req.username = username
+        req.password = password
+        next()
+    }
+}
 
 
 
 
 module.exports = {
-checkUsername
+checkUsername,
+checkCred
 }

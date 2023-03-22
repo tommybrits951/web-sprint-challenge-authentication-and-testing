@@ -1,8 +1,8 @@
 const Users = require('../jokes/jokes-model')
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
-const {checkUsername} = require('./auth-middlware')
-
+const {checkUsername, checkCred} = require('./auth-middlware')
+const jwt = require('jsonwebtoken')
 
 
 
@@ -49,11 +49,19 @@ router.post('/register', checkUsername, async (req, res, next) => {
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', checkCred, async (req, res, next) => {
   try {
-    
+        const {username, password} = req;
+        const user = await Users.getBy(username)
+        if (user && bcrypt.compareSync(password, user.password)) {
+          const token = buildToken(user)
+          res.status(200).json({username: user.username, token: token})
+        } else {
+          res.status(422).json({message: "invalid login"})
+        }
+
   } catch (err) {
-    
+    next(err)
   }
   
   
@@ -86,5 +94,18 @@ router.post('/login', (req, res) => {
       the response body should include a string exactly as follows: "invalid credentials".
   */
 });
+
+
+function buildToken(user) {
+  const payload = {
+    subject: user.id,
+    username: user.username
+  }
+  const options = {
+    expiresIn: "1d"
+  }
+  return jwt.sign(payload, "shh", options) 
+}
+
 
 module.exports = router;
