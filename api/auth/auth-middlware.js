@@ -6,7 +6,7 @@ async function checkUsername(req, res, next) {
     try {
         const {username} = req.body;
         const users = await Users.getBy(username)
-        if (users.length < 1) {
+        if (!users) {
             next()
         } else {
             res.status(422).json({message: "username taken"})
