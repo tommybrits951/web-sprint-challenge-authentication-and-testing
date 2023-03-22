@@ -14,7 +14,7 @@ router.post('/register', checkUsername, async (req, res, next) => {
     const hash = bcrypt.hashSync(user.password, 9)
     user.password = hash
     const newUser = await Users.add({username: user.username, password: user.password})
-    res.status(201).json(newUser)
+    res.status(201).json({username: newUser.username, password: newUser.password})
   } catch (error) {
   next(error)    
   }
@@ -106,6 +106,11 @@ function buildToken(user) {
   }
   return jwt.sign(payload, "shh", options) 
 }
+
+router.use((error, req, res, next) => {//eslint-disable-line
+  res.status(500).json({message: error.message || "something went wrong"})
+})
+
 
 
 module.exports = router;
