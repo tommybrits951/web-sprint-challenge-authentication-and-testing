@@ -1,7 +1,27 @@
+const Users = require('../jokes/jokes-model')
 const router = require('express').Router();
+const bcrypt = require("bcryptjs");
 
-router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+
+
+
+
+
+router.post('/register', async (req, res, next) => {
+  
+  try {
+    const user = req.body
+    const hash = bcrypt.hashSync(user.password, 9)
+    user.password = hash
+    const newUser = await Users.add({username: user.username, password: user.password})
+    res.status(201).json(newUser)
+  } catch (error) {
+  next(error)    
+  }
+  
+
+  
+  
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -30,7 +50,18 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  res.end('implement login, please!');
+  try {
+    
+  } catch (err) {
+    
+  }
+  
+  
+  
+  
+  
+  
+  
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
