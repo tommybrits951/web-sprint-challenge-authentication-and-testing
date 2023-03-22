@@ -1,13 +1,13 @@
 const Users = require('../jokes/jokes-model')
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
+const {checkUsername} = require('./auth-middlware')
 
 
 
 
 
-
-router.post('/register', async (req, res, next) => {
+router.post('/register', checkUsername, async (req, res, next) => {
   
   try {
     const user = req.body

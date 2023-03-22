@@ -5,12 +5,16 @@ async function add(user) {
     const newUser = getById(id)
     return newUser
 }
-
+async function getBy(filter) {
+    const users = await db('users').where({filter})
+    return users
+}
 function getById(id) {
     return db('users').where("id", id).first()
 }
 
 module.exports = {
     getById,
-    add
+    add,
+    getBy
 }
