@@ -19,7 +19,7 @@ function checkCred(req, res, next) {
     const {username, password} = req.body;
     
     if (username === undefined || password === undefined) {
-        res.status(422).json({message: "username and password required"})
+        res.status(401).json({message: "username and password required"})
     } else {
         req.username = username
         req.password = password
