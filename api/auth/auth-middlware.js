@@ -9,7 +9,7 @@ async function checkUsername(req, res, next) {
         if (!users) {
             next()
         } else {
-            res.status(422).json("username taken")
+            res.status(422).json({message: "username taken"})
         }
     } catch (error) {
         next(error)
@@ -18,7 +18,7 @@ async function checkUsername(req, res, next) {
 function checkCred(req, res, next) {
     const {username, password} = req.body;
     
-    if (username === undefined || password === undefined) {
+    if (username === undefined || password === undefined || !username || !password || username.length === 0 || password.length === 0) {
         res.status(401).json({message: "username and password required"})
     } else {
         req.username = username
