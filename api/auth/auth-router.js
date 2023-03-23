@@ -47,13 +47,11 @@ router.post('/register', checkUsername, async (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-router.post('/login', async (req, res) => {
+router.post('/login', checkUsername, checkCred, async (req, res) => {
   try {
         const {username, password} = req.body;
         const user = await Users.getBy(username)
-        if (!user.username || !user.password) {
-          res.status(401).json({message: 'username and password required'})  
-        } else if (user && bcrypt.compareSync(password, user.password)) {
+        if (user && bcrypt.compareSync(password, user.password)) {
           const token = buildToken(user)
           res.status(200).json({message: `welcome, ${user.username}`, token: token, })
         } else {
