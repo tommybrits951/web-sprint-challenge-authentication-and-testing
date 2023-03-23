@@ -1,6 +1,6 @@
 const e = require('express');
 const Users = require('../jokes/jokes-model')
-
+const bcrypt = require('bcryptjs')
 
 
 async function checkUsername(req, res, next) {
@@ -17,17 +17,23 @@ async function checkUsername(req, res, next) {
     }
 }
 async function checkCred(req, res, next) {
-    const {username, password} = req.body;
-    const user = await Users.getBy(username)
-
-    if (username === undefined || password === undefined ) {
-       next({status: 401, message: "username and password required"})
-    } else if (!user) {
-        res.status(401).json({message: "invalid credentials"})
-    } else {
-        req.username = username
-        req.password = password
-        next()
+    try {
+        const {username, password} = req.body
+        const user = await Users.getBy(username)
+        if (!user) {
+            res.status(401).json({message: 'invalid credentials'})
+        } else if (!bcrypt.compareSync(password, user.password)) {
+            res.status(401).json({message: 'invalid credentials'})
+        } else if (!username || !password) {
+            
+            res.status(401).json({message: 'username and password required'})
+        } else {
+            req.username = username
+            req.password = password
+            next()
+        }
+    } catch (err) {
+        res.status(401).json({message: 'invalid credentials'})
     }
 }
 
