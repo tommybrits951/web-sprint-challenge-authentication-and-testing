@@ -59,7 +59,7 @@ router.post('/login', checkCred, async (req, res, next) => {
           const token = buildToken(user)
           res.status(200).json({message: `welcome, ${user.username}`, token: token, })
         } else {
-          res.status(401).json({message: "token required"})
+          res.status(401).json({message: "invalid credentials"})
         }
 
   } catch (err) {
