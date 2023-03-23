@@ -22,7 +22,7 @@ async function checkCred(req, res, next) {
 
     if (username === undefined || password === undefined ) {
        next({status: 401, message: "username and password required"})
-    } else if (user) {
+    } else if (!user) {
         res.status(401).json({message: "invalid credentials"})
     } else {
         req.username = username
