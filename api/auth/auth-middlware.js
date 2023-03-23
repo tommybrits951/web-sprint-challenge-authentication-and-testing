@@ -19,7 +19,7 @@ function checkCred(req, res, next) {
     const {username, password} = req.body;
     
     if (username === undefined || password === undefined || !username || !password || username.length === 0 || password.length === 0) {
-        res.status(401).json({message: "username and password required"})
+       next({status: 401, message: "username and password required"})
     } else {
         req.username = username
         req.password = password
