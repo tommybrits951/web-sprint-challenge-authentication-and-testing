@@ -3,27 +3,21 @@ const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = require('../middleware/config/config')
+const {checkUsername, checkCred} = require('./auth-middlware')
 
 
-
-router.post('/register', async (req, res, next) => {
-  
+router.post('/register', checkUsername, async (req, res) => {
   try {
-    const user = req.body
-    const users = await Users.getBy(user.username) 
-    if (users) {
-      res.status(401).json({message: 'username taken'})
-    } else if (!user.username || !user.password) {
-      res.status(401).json({message: 'username and password required'})
-    } else {
-     const hash = bcrypt.hashSync(user.password, 9)
-      user.password = hash
-      const newUser = await Users.add({username: user.username, password: user.password})
-      res.status(201).json(newUser)
-    }
-  } catch (error) {
-  next(error)    
+    let user = req.body;
+    const hash = bcrypt.hashSync(user.password, 8) 
+    user.password = hash
+    const newUser = await Users.add({username: user.username, password: user.password})
+    res.status(200).json(newUser)
+  } catch (err) {
+    res.status(401).json({message: 'username and password required'})
   }
+}
+)
   
 
   
@@ -53,8 +47,6 @@ router.post('/register', async (req, res, next) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-});
-
 router.post('/login', async (req, res) => {
   try {
         const {username, password} = req.body;
