@@ -3,7 +3,7 @@ const Users = require('../jokes/jokes-model')
 async function checkUsername(req, res, next) {
     try {
         const {username, password} = req.body
-        const users = await Users.getBy({username: username})
+        const users = await Users.getBy(username)
         if (users) {
             res.status(401).json({message: "username taken"})
         } else if (!username || !password) {
