@@ -3,7 +3,7 @@ const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const {checkUsername, checkCred} = require('./auth-middlware')
 const jwt = require('jsonwebtoken')
-
+const JWT_SECRET = require('../middleware/config/config')
 
 
 
@@ -104,7 +104,7 @@ function buildToken(user) {
   const options = {
     expiresIn: "1d"
   }
-  return jwt.sign(payload, "shh", options) 
+  return jwt.sign(payload, JWT_SECRET, options) 
 }
 
 router.use((error, req, res, next) => {//eslint-disable-line
