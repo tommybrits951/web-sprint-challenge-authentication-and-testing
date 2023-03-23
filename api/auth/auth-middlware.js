@@ -9,7 +9,7 @@ async function checkUsername(req, res, next) {
         if (!users) {
             next()
         } else {
-            res.status(422).json({message: "username taken"})
+            res.status(422).json("username taken")
         }
     } catch (error) {
         next(error)
