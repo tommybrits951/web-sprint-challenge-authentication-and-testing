@@ -53,7 +53,7 @@ router.post('/login', checkCred, async (req, res, next) => {
   try {
         const {username, password} = req;
         const user = await Users.getBy(username)
-        if (!username) {
+        if (!user.username) {
           res.status(401).json({message: 'invalid credentials'})
         } else if (user && bcrypt.compareSync(password, user.password)) {
           const token = buildToken(user)
