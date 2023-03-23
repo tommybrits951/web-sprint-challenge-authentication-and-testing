@@ -1,16 +1,21 @@
 const Users = require('../jokes/jokes-model')
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
-const {checkUsername, checkCred} = require('./auth-middlware')
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = require('../middleware/config/config')
 
 
 
-router.post('/register', checkCred, checkUsername, async (req, res, next) => {
+router.post('/register', async (req, res, next) => {
   
   try {
     const user = req.body
+    const users = await Users.getBy(user.username) 
+    if (users) {
+      res.status(401).json({message: 'username taken'})
+    } else if (!user.username || !user.password) {
+      res.status(401).json({message: 'username and password required'})
+    }
     const hash = bcrypt.hashSync(user.password, 9)
     user.password = hash
     const newUser = await Users.add({username: user.username, password: user.password})
@@ -49,7 +54,7 @@ router.post('/register', checkCred, checkUsername, async (req, res, next) => {
   */
 });
 
-router.post('/login', checkCred, async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
         const {username, password} = req;
         const user = await Users.getBy(username)
