@@ -2,7 +2,7 @@ const Users = require('../jokes/jokes-model')
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
-const JWT_SECRET = require('../middleware/config/config')
+const JWT_SECRET = require('../middleware/config/config')//eslint-disable-line
 const {checkUsername, checkCred} = require('./auth-middlware')
 
 

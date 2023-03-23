@@ -6,8 +6,7 @@ async function checkUsername(req, res, next) {
         const users = await Users.getBy(username)
         if (users) {
             res.status(401).json({message: "username taken"})
-        } else if (!username || !password) {
-            
+        } else if (!req.body.username || !password) {
             res.status(401).json({message: 'username and password required'})
         } else {
             next()
@@ -24,7 +23,6 @@ async function checkCred(req, res, next) {
         const user = await Users.getBy(username)
     if (!username || !password) {
         res.status(401).json({message: 'username and password required'})
-        console.log(user)
     } else {
         req.username = username
         req.password = password
