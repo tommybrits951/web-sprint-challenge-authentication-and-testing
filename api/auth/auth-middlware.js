@@ -1,9 +1,9 @@
 const Users = require('../jokes/jokes-model')
-const bcrypt = require('bcryptjs')
+
 async function checkUsername(req, res, next) {
     try {
         const {username, password} = req.body
-        const users = await Users.getBy(username)
+        const users = await Users.getBy({username: username})
         if (users) {
             res.status(401).json({message: "username taken"})
         } else if (!username || !password) {
@@ -22,18 +22,18 @@ async function checkCred(req, res, next) {
     try {
         const {username, password} = req.body
         const user = await Users.getBy(username)
-        if (!user) {
-            res.status(401).json({message: 'invalid credentials'})
-        
-        
-        } else {
-            req.username = username
-            req.password = password
-            next()
-        }
+    if (!username || !password) {
+        res.status(401).json({message: 'username and password required'})
+        console.log(user)
+    } else {
+        req.username = username
+        req.password = password
+        req.user = user
+        next()
+    }
        
     } catch (err) {
-        res.status(401).json({message: err.message})
+        res.status(401).json({message: 'err.message'})
     }
 }
 

@@ -6,9 +6,8 @@ async function add(user) {
     return newUser
 }
 async function getBy(filter) {
-    const users = await db('users').where("username", filter).first()
-    console.log(users)
-    return users
+    const user = await db('users').where("username", filter).first()
+    return user
 }
 function getById(id) {
     return db('users').where("id", id).first()
