@@ -1,3 +1,4 @@
+const e = require('express');
 const Users = require('../jokes/jokes-model')
 
 
@@ -15,11 +16,14 @@ async function checkUsername(req, res, next) {
         next(error)
     }
 }
-function checkCred(req, res, next) {
+async function checkCred(req, res, next) {
     const {username, password} = req.body;
-    
-    if (username === undefined || password === undefined || !username || !password || username.length === 0 || password.length === 0) {
+    const user = await Users.getBy(username)
+
+    if (username === undefined || password === undefined ) {
        next({status: 401, message: "username and password required"})
+    } else if (user) {
+        res.status(401).json({message: "invalid credentials"})
     } else {
         req.username = username
         req.password = password
