@@ -1,4 +1,4 @@
-const e = require('express');
+
 const Users = require('../jokes/jokes-model')
 const bcrypt = require('bcryptjs')
 
