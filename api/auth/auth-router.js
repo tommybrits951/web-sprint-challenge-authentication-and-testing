@@ -3,10 +3,10 @@ const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = require('../middleware/config/config')//eslint-disable-line
-const {checkUsername, checkCred} = require('./auth-middlware')
+const {check, checkUsername, checkCred} = require('./auth-middlware')
 
 
-router.post('/register', checkUsername, async (req, res) => {
+router.post('/register',check, checkUsername, async (req, res) => {
   try {
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 8) 
@@ -47,7 +47,7 @@ router.post('/register', checkUsername, async (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
-router.post('/login', checkCred, async (req, res) => {
+router.post('/login',check, checkCred, async (req, res) => {
   try {
         const {username, password} = req.body;
         const user = await Users.getBy(username)
